@@ -2,7 +2,7 @@ const isbnInput = document.getElementById("isbn");
 const scanBtn = document.getElementById("fetch");
 const form = document.getElementById("book-form");
 const preview = document.getElementById('preview');
-window.addEventListener('load', function () {
+window.addEventListener('DOMContentLoaded', function () {
       let selectedDeviceId;
       const codeReader = new ZXing.BrowserMultiFormatReader()
       console.log('ZXing code reader initialized')
@@ -31,7 +31,7 @@ window.addEventListener('load', function () {
               if (result) {
                 console.log(result)
                 document.getElementById('result').textContent = result.text
-                form.elements.namedItem("isbn").value = result.text
+                isbnInput.value = result.text
               }
               if (err && !(err instanceof ZXing.NotFoundException)) {
                 console.error(err)
