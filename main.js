@@ -31,7 +31,7 @@ window.addEventListener('DOMContentLoaded', function () {
               if (result) {
                 console.log(result)
                 document.getElementById('result').textContent = result.text
-                isbnInput.value = result.text
+                document.getElementById("isbn").value = result.text
               }
               if (err && !(err instanceof ZXing.NotFoundException)) {
                 console.error(err)
@@ -98,3 +98,4 @@ form.addEventListener("submit", async (e) => {
   form.reset();
   isbnInput.value = "";
 });
+
