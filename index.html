@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Scan Book</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>Scan ISBN</h1>
+<main class="wrapper" style="padding-top:2em">
+
+    <section class="container" id="demo-content">
+      <div>
+        <a class="button" id="startButton">Start</a>
+        <a class="button" id="resetButton">Reset</a>
+      </div>
+
+      <div>
+        <video id="video" width="300" height="200" style="border: 1px solid gray"></video>
+      </div>
+
+      <div id="sourceSelectPanel" style="display:none">
+        <label for="sourceSelect">Change video source:</label>
+        <select id="sourceSelect" style="max-width:400px">
+        </select>
+      </div>
+
+      <label>Result:</label>
+      <pre><code id="result"></code></pre>
+
+  </main>
+
+
+  <input type="text" id="isbn" placeholder="Scan ISBN here">
+  <button id="fetch">Scan Book</button>
+
+  <form id="book-form">
+    <input type="text" name="title" placeholder="Title">
+    <input type="text" name="author" placeholder="Author">
+    <input type="text" name="publisher" placeholder="Publisher">
+    <input type="text" name="year" placeholder="Year">
+    <input type="number" name="price" placeholder="Price">
+    <input type="number" name="quantity" placeholder="Quantity" value="1">
+    <input type="text" name="cover_image_url" hidden>
+    <input type="file" name="cover_image" accept="image/*" capture="environment" hidden>
+    <button type="submit">Save Book</button>
+  </form>
+  <img id="preview" style="max-width:200px; display:block; margin-top:10px;">
+  <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest/umd/index.min.js"></script>
+<script type="module" src="main.js"></script>
+</body>
+</html>
