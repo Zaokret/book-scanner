@@ -53,6 +53,73 @@ window.addEventListener('DOMContentLoaded', function () {
         })
     })
 
+function updateTable() {
+const tbody = document.querySelector("#books-table tbody");
+  tbody.innerHTML = "";
+  books.forEach(book => {
+    const tr = document.createElement("tr");
+
+    tr.innerHTML = `
+      <td>${book.isbn}</td>
+      <td>${book.title}</td>
+      <td>${book.author}</td>
+      <td>${book.publisher}</td>
+      <td>${book.year}</td>
+      <th>${book.price}</th>
+      <td><img src="${book.cover_image_url}" alt="${book.title}"></td>
+    `;
+
+    tbody.appendChild(tr);
+  });
+  }
+
+function downloadBooksCSV() {
+    // headers
+    const headers = ["isbn","title","author","publisher","year","price",  "cover_image_url"];
+
+    // rows
+    const rows = books.map(b => [
+      String(b.isbn),
+      b.title,
+      b.author,
+      b.publisher,
+      b.year,
+      b.price,
+      b.cover_image_url
+    ]);
+
+    // escape CSV cells
+    const escapeCSV = (val) => {
+      if (val == null) return "";
+      const str = String(val);
+      if (/[",\n]/.test(str)) {
+        return '"' + str.replace(/"/g, '""') + '"';
+      }
+      return str;
+    };
+
+    const csvContent = [
+      headers.join(","),
+      ...rows.map(r => r.map(escapeCSV).join(","))
+    ].join("\n");
+
+    // make blob and download
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "books.csv";
+    a.style.display = "none";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+const downloadCsv = document.getElementById('download-csv')
+downloadCsv.addEventListener('click', () => downloadBooksCSV())
+
 async function fetchBookMetadata(isbn) {
   if (!isbn) return alert("Enter ISBN");
 
@@ -115,4 +182,5 @@ form.addEventListener("submit", async (e) => {
   form.reset();
   isbnInput.value = "";
 });
+
 
