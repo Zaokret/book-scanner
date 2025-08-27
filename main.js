@@ -1,3 +1,4 @@
+let books = []
 const isbnInput = document.getElementById("isbn");
 const scanBtn = document.getElementById("fetch");
 const form = document.getElementById("book-form");
@@ -179,6 +180,7 @@ form.addEventListener("submit", async (e) => {
   form.reset();
   isbnInput.value = "";
 });
+
 
 
 
