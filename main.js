@@ -173,14 +173,12 @@ form.addEventListener("submit", async (e) => {
   e.preventDefault();
   const bookData = Object.fromEntries(new FormData(form).entries());
   bookData.isbn = isbnInput.value.trim();
-  await fetch("/api/books", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(bookData)
-  });
-  alert("Saved!");
+  bookData.cover_image = bookData.cover_image?.name || ""
+  books.push(bookData)
+  updateTable()
   form.reset();
   isbnInput.value = "";
 });
+
 
 
