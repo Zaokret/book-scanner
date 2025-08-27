@@ -56,17 +56,28 @@ window.addEventListener('DOMContentLoaded', function () {
 async function fetchBookMetadata(isbn) {
   if (!isbn) return alert("Enter ISBN");
 
-  // Fetch from OpenLibrary
-  try {
-    const res = await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`, { redirect: 'follow' });
-    if (!res.ok) throw new Error("Not found");
-    const data = await res.json();
-    const book = data[`ISBN:${isbn}`]
+const biblioNew = fetch(`https://www.biblio.com/app/jaxie/get_buy_options/type/new/isbn/${isbn}`)
+const biblioUsed = fetch(`https://www.biblio.com/app/jaxie/get_buy_options/type/used/isbn/${isbn}`)
+
+const book = await Promise.allSettled([biblioNew, biblioUsed])
+.then(responses => Promise.allSettled(responses.filter(res => res.status === "fulfilled").map(r => r.value.text())))
+.then((arrayOfRawData) => {
+    const objs = arrayOfRawData.map(text => JSON.parse(text.value))
+    const match = objs.find(obj => !!obj.book_id)
+    return {
+        title: match.title,
+        author: match.author,
+        publisher: match.publisher,
+        year: match.publish_date,
+        cover_image_url: null
+    }
+})
+      if(!book) return alert("Book not found, fill manually")
     form.elements.namedItem("title").value = book.title || ""
-    form.elements.namedItem("author").value = book.authors?.map((a)=>a.name).join(", ") || "";
-    form.elements.namedItem("publisher").value = book.publishers?.map((a)=>a.name).join(', ') || ""
+    form.elements.namedItem("author").value = book.author || "";
+    form.elements.namedItem("publisher").value = book.publisher || ""
     form.elements.namedItem("year").value = book.publish_date || "";
-    const cover = book.cover?.large || book.cover?.medium || book.cover?.small;
+    const cover = book.cover_image_url;
     if(cover) {
       form.elements.namedItem("cover_image_url").value
       preview.src = cover;
@@ -74,10 +85,31 @@ async function fetchBookMetadata(isbn) {
     else {
       form.elements.namedItem("cover_image").hidden = false;
     }
-  } catch (e) {
-    debugger
-    alert("Book not found, fill manually");
-  }
+
+  // // Fetch from OpenLibrary
+  // try {
+
+
+  //   const res = await fetch(`https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`, { redirect: 'follow' });
+  //   if (!res.ok) throw new Error("Not found");
+  //   const data = await res.json();
+  //   const book = data[`ISBN:${isbn}`]
+  //   form.elements.namedItem("title").value = book.title || ""
+  //   form.elements.namedItem("author").value = book.authors?.map((a)=>a.name).join(", ") || "";
+  //   form.elements.namedItem("publisher").value = book.publishers?.map((a)=>a.name).join(', ') || ""
+  //   form.elements.namedItem("year").value = book.publish_date || "";
+  //   const cover = book.cover?.large || book.cover?.medium || book.cover?.small;
+  //   if(cover) {
+  //     form.elements.namedItem("cover_image_url").value
+  //     preview.src = cover;
+  //   }
+  //   else {
+  //     form.elements.namedItem("cover_image").hidden = false;
+  //   }
+  // } catch (e) {
+  //   debugger
+  //   alert("Book not found, fill manually");
+  // }
 }
 
 scanBtn.addEventListener("click", async () => {
@@ -98,4 +130,3 @@ form.addEventListener("submit", async (e) => {
   form.reset();
   isbnInput.value = "";
 });
-
