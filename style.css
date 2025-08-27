@@ -1,4 +1,8 @@
 body { font-family: sans-serif; padding: 20px; }
-input, button { margin: 5px; padding: 5px; }
+input, button { margin: 5px; padding: 15px; }
 table { width: 100%; border-collapse: collapse; margin-top: 20px; }
 th, td { padding: 8px; text-align: left; }
+form {
+    display: flex;
+    flex-direction: column;
+}
