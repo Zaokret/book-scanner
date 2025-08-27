@@ -61,7 +61,7 @@ const book = await fetch(`https://bookstore-proxy-eta.vercel.app/api/books?isbn=
     form.elements.namedItem("title").value = book.title || ""
     form.elements.namedItem("author").value = book.author || "";
     form.elements.namedItem("publisher").value = book.publisher || ""
-    form.elements.namedItem("year").value = book.publish_date || "";
+    form.elements.namedItem("year").value = book.year || "";
     const cover = book.cover_image_url;
     if(cover) {
       form.elements.namedItem("cover_image_url").value
@@ -115,3 +115,4 @@ form.addEventListener("submit", async (e) => {
   form.reset();
   isbnInput.value = "";
 });
+
